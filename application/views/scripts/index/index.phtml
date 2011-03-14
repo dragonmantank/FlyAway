@@ -6,6 +6,10 @@
 		$('#button_search').click(function() {
 
 			$('#loader').fadeIn();
+			$('#username_results').hide();
+			$('#friends_results').hide();
+			$('#error').hide();
+			
 			$('#username_available').html('');
 			$('#statusnet_count').html('');
 			$('#twitter_count').html('');
@@ -35,23 +39,28 @@
 				data: { username: $('#twitter_username').val() },
 				dataType: 'json',
 				success: function(data, status, rq) {
-					$('#statusnet_count').html(data.statusnet.length);
-					$('#twitter_count').html(data.twitter.length);
-					
-					for(var i in data.statusnet) {
-						var html = Mustache.to_html(statusnet_template, data.statusnet[i]);
-						$('#statusnet_friends').append(html);
-					}
-					
-					for(var i in data.twitter) {
-						var html = Mustache.to_html(twitter_template, data.twitter[i]);
-						$('#twitter_friends').append(html);
+					if(data != null) {
+						$('#statusnet_count').html(data.statusnet.length);
+						$('#twitter_count').html(data.twitter.length);
 
+						for(var i in data.statusnet) {
+							var html = Mustache.to_html(statusnet_template, data.statusnet[i]);
+							$('#statusnet_friends').append(html);
+						}
+
+						for(var i in data.twitter) {
+							var html = Mustache.to_html(twitter_template, data.twitter[i]);
+							$('#twitter_friends').append(html);
+
+						}
+
+						$('#loader').hide();
+						$('#username_results').fadeIn();					
+						$('#friends_results').fadeIn();						
+					} else {
+						$('#loader').hide();
+						$('#error').fadeIn();
 					}
-					
-					$('#loader').hide();
-					$('#username_results').fadeIn();					
-					$('#friends_results').fadeIn();
 				},
 				type: 'POST',
 				url: '<?php echo $this->baseURL(); ?>/worker/twitterfriends'
@@ -75,6 +84,12 @@
 <div id="loader">
 	<div id="loader_message">Compiling all the information. The more friends you have, the longer this will take...</div>
 	<img src="<?php echo $this->baseUrl(); ?>/css/images/ajax-loader.gif" />
+</div>
+
+<div id="error">
+	<p>
+		Oops, we couldn't find that Twitter username. Maybe it was misspelled?
+	</p>
 </div>
 
 <div id="username_results">

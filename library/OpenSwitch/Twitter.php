@@ -9,15 +9,18 @@ class OpenSwitch_Twitter
 		$result = curl_exec($ch);
 		$data = json_decode($result);
 
-		$friends = array();
-		foreach($data as $friend) {
-			$friends[$friend->screen_name] = array(
-				'profile_image' => $friend->profile_image_url,
-				'screen_name' => $friend->screen_name,
-				'name' => $friend->name,
-			);
+		if(is_array($data)) {
+			$friends = array();
+			foreach($data as $friend) {
+				$friends[$friend->screen_name] = array(
+					'profile_image' => $friend->profile_image_url,
+					'screen_name' => $friend->screen_name,
+					'name' => $friend->name,
+				);
+			}
+			return $friends;
+		} else {
+			return array();
 		}
-		
-		return $friends;
 	}
 }

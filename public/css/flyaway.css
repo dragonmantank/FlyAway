@@ -29,7 +29,7 @@ p {
 	color: white;
 }
 
-#username_results, #friends_results, #loader {
+#username_results, #friends_results, #loader, #error {
 	display: none;
 }
 
