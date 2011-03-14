@@ -51,3 +51,7 @@ p {
 	height: 48px;
 	width: 48px;
 }
+
+#friends_results h4 {
+	margin-top: 10px;
+}
