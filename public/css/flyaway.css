@@ -1,0 +1,49 @@
+* {
+	margin: 0px;
+	font-family: Verdana, Arial;
+}
+
+html {
+	background-color: #EDEDED;
+	background-image: url('images/background.png');
+	background-repeat: repeat-x;
+}
+
+p {
+	margin: 10px 0px 10px 0px;
+	font-size: 10pt;
+}
+
+#header {
+	height: 60px;
+	line-height: 60px;
+}
+
+#header h1 {
+	margin: 0px;
+	color: white;
+}
+
+#about {
+	height: 110px;
+	color: white;
+}
+
+#username_results, #friends_results, #loader {
+	display: none;
+}
+
+#loader {
+	text-align: center;
+}
+
+#footer {
+	text-align: right;
+	color: #D2D2D2;
+	font-size: 8pt;
+}
+
+.friend img {
+	height: 48px;
+	width: 48px;
+}

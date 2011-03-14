@@ -1,0 +1,36 @@
+<html>
+<head>
+	<title>FlyAway</title>
+	<link rel="stylesheet" href="/css/960gs.css" />
+	<link rel="stylesheet" href="/css/flyaway.css" />
+	
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js"></script>
+	<script type="text/javascript" src="<?php echo $this->baseUrl(); ?>/js/mustache.js"></script>
+</head>
+
+<body>
+	<div class="container_12">
+		<div class="grid_12 omega" id="header">
+			<h1>FlyAway - Switch from Twitter to Identi.ca</h1>
+		</div>
+		
+		<div class="grid_12 omega" id="about">
+			<p>
+				Are you thinking about switching from Twitter to Identi.ca? FlyAway will help you identify your friends that have already switched, as well as the friends that are still using Twitter.
+			</p>
+			
+			<p>
+				FlyAway does this by comparing usernames on each service. Since this sometimes doesn't work, please double-check the information. Most people try to keep the same screen name.
+			</p>
+		</div>
+		
+		<div class="grid_12 omega" id="content">
+			<?php echo $this->layout()->content; ?>
+		</div>
+		
+		<div class="grid_12 omega" id="footer">
+			Copyright 2011 Chris Tankersley
+		</div>
+	</div>
+</body>
+</html>
