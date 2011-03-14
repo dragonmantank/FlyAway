@@ -37,6 +37,10 @@ p {
 	text-align: center;
 }
 
+#username_results {
+	margin-top: 10px;
+}
+
 #footer {
 	text-align: right;
 	color: #D2D2D2;
