@@ -2,16 +2,32 @@
 
 class OpenSwitch_Twitter
 {
-	static public function getFriendsList($username)
+	static protected function fetchFriends($username, $cursor = -1)
 	{
-		$ch = curl_init('http://api.twitter.com/1/statuses/friends/'.$username.'.json');
+		$ch = curl_init('http://api.twitter.com/1/statuses/friends/'.$username.'.json?cursor='.$cursor);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 		$result = curl_exec($ch);
-		$data = json_decode($result);
+		return json_decode($result);
+	}
+	
+	static public function getFriendsList($username)
+	{
+		$data = self::fetchFriends($username);	
+		$friends = self::processList($data);
 
-		if(is_array($data)) {
+		while($data->next_cursor > 0) {
+			$data = self::fetchFriends($username, $data->next_cursor);
+			$friends = array_merge($friends, self::processList($data));
+		}
+		
+		return $friends;
+	}
+	
+	static protected function processList($data)
+	{
+		if(is_array($data->users)) {
 			$friends = array();
-			foreach($data as $friend) {
+			foreach($data->users as $friend) {
 				$friends[$friend->screen_name] = array(
 					'profile_image' => $friend->profile_image_url,
 					'screen_name' => $friend->screen_name,
