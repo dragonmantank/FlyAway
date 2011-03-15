@@ -12,12 +12,19 @@ class OpenSwitch_Twitter
 	
 	static public function getFriendsList($username)
 	{
-		$data = self::fetchFriends($username);	
-		$friends = self::processList($data);
+		$cache = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cache');
+		$key = 'twitter_friendslist_'.$username;
+		$friends = $cache->load($key);
+		
+		if($friends == false) {
+			$data = self::fetchFriends($username);	
+			$friends = self::processList($data);
 
-		while($data->next_cursor > 0) {
-			$data = self::fetchFriends($username, $data->next_cursor);
-			$friends = array_merge($friends, self::processList($data));
+			while($data->next_cursor > 0) {
+				$data = self::fetchFriends($username, $data->next_cursor);
+				$friends = array_merge($friends, self::processList($data));
+			}
+			$cache->save($friends, $key);
 		}
 		
 		return $friends;
