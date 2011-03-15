@@ -19,14 +19,14 @@ class OpenSwitch_Twitter
 		if($friends == false) {
 			$data = self::fetchFriends($username);	
 			$friends = self::processList($data);
+			$cursor = sprintf('%.0f', $data->next_cursor);
 
-			while($data->next_cursor > 0) {
-				$data = self::fetchFriends($username, $data->next_cursor);
+			while((string)$data->next_cursor != '0') {
+				$data = self::fetchFriends($username, $cursor);
 				$friends = array_merge($friends, self::processList($data));
 			}
 			$cache->save($friends, $key);
 		}
-		
 		return $friends;
 	}
 	
