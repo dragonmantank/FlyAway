@@ -4,9 +4,8 @@ class OpenSwitch_Twitter
 {
 	static protected function fetchFriends($page = 1)
 	{
-		echo 'Calling API';
 		$twitter = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('twitter');
-		$data = $twitter->user->friends(array('page' => $page));
+		$data = $twitter->user->friends(array('cursor' => $page));
 		return $data;
 	}
 	
@@ -14,29 +13,18 @@ class OpenSwitch_Twitter
 	{
 		$cache = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cache');
 		$key = 'twitter_friendslist_'.$username;
-		//$friends = $cache->load($key);
+		$friends = $cache->load($key);
 		$friends = false;
 		if($friends == false) {
 			
 			$friends = array();
-			$count = 99;
-			$page = 1;
-			while($count == 99) {
-				echo 'Getting friends';
-				try {
-					$data = self::fetchFriends($page);
-					if(is_array($data->users)) {
-						$list = self::processList($data->user);
-						$friends = array_merge($friends, $list);
-						$count = count($list);
-						$page++;
-					} else {
-						break;
-					}
-				} catch(Exception $e) {
-				}
-			}
-			
+			$cursor = -1;
+			do {
+				$data = self::fetchFriends($cursor);
+				$cursor = sprintf('%.0f', $data->next_cursor);
+				$list = self::processList($data->user);
+				$friends = array_merge($friends, $list);
+			} while (count($data->user) == 99);
 			if($data->error) {
 				return $data->error;
 			}

@@ -5,7 +5,7 @@ class AuthController extends Zend_Controller_Action
 	public function indexAction()
 	{
 		$config = $this->getInvokeArg('bootstrap')->getOptions();
-		$consumer = new Zend_OAuth_Consumer(array(
+		$consumer = new Zend_Oauth_Consumer(array(
 			'callbackUrl' => 'http://'.$_SERVER['SERVER_NAME'].'/'.$this->view->baseUrl().'/auth',
 			'siteUrl' => 'http://twitter.com/oauth',
 			'consumerKey' => $config['twitter']['key'],

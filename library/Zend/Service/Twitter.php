@@ -362,6 +362,9 @@ class Zend_Service_Twitter extends Zend_Rest_Client
                 case 'page':
                     $_params['page'] = (int) $value;
                     break;
+		case 'cursor':
+	 	    $_params['cursor'] = $value;
+ 		    break;
                 default:
                     break;
             }
@@ -554,6 +557,9 @@ class Zend_Service_Twitter extends Zend_Rest_Client
                 case 'page':
                     $_params['page'] = (int) $value;
                     break;
+		case 'cursor':
+		    $_params['cursor'] = $value;
+		    break;
                 default:
                     break;
             }

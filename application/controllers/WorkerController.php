@@ -15,15 +15,15 @@ class WorkerController extends Zend_Controller_Action
 		if($this->getRequest()->isPost()) {
 			$data = $this->getRequest()->getPost();
 			$friends = OpenSwitch_Twitter::getFriendsList($data['username']);
-var_dump($friends); die();
+
 			if(count($friends)) {
 				$result = array();
 				foreach($friends as $screen_name => $friend) {
-					//if(OpenSwitch_Identica::userExists($screen_name)) {
-					//	$result['statusnet'][] = (array)$friend;
-					//} else {
-					//	$result['twitter'][] = (array)$friend;
-					//}
+					if(OpenSwitch_Identica::userExists($screen_name)) {
+						$result['statusnet'][] = (array)$friend;
+					} else {
+						$result['twitter'][] = (array)$friend;
+					}
 				}
 
 				echo json_encode($result);
