@@ -9,10 +9,11 @@ class OpenSwitch_Twitter
 		return $data;
 	}
 	
-	static public function getFriendsList($username)
+	static public function getFriendsList()
 	{
 		$cache = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cache');
-		$key = 'twitter_friendslist_'.$username;
+		$access_token = unserialize($_SESSION['TWITTER_ACCESS_TOKEN']);
+		$key = 'twitter_friendslist_'.$access_token->screen_name;
 		$friends = $cache->load($key);
 		$friends = false;
 		if($friends == false) {

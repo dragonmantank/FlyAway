@@ -82,7 +82,9 @@
 <?php else: ?>
 	<div id="search_area">
 		<p>
-			To get us started, please type in your Twitter username. Since we're just gathering public data, there is no need to log into Twitter. Click on "Let's Begin" and we will check to see if your username is available on Identi.ca, and then check your friends.
+			Welcome <?php echo $this->access_token->screen_name; ?>!
+		<p>
+			To get started, just click on "Let's Begin". We'll connect to your Twitter account and grab your friends list. With the list, we'll compare that to Identi.ca's users and see if any of the usernames match. Since we cache some of this data, if some of your friends have switched over within the last hour, FlyAway may not have noticed yet.
 		</p>
 
 		<p>
@@ -90,7 +92,7 @@
 		</p>
 
 		<form>
-			Twitter Username: <input type="text" id="twitter_username" /> <input type="submit" id="button_search" value="Let's Begin" />
+			<input type="submit" id="button_search" value="Let's Begin" />
 		</form>
 	</div>
 

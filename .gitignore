@@ -1,0 +1,14 @@
+# Mac OSX Stores
+.DS_Store
+
+# Application ini file
+application/configs/application.ini
+
+# Cache files
+cache/*
+
+# Temp files
+tmp/*
+
+# Netbeans files
+nbproject/*

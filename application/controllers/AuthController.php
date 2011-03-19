@@ -16,7 +16,7 @@ class AuthController extends Zend_Controller_Action
 		{
 			$token = $consumer->getAccessToken($_GET, unserialize($_SESSION['TWITTER_REQUEST_TOKEN']));
 			$_SESSION['TWITTER_ACCESS_TOKEN'] = serialize($token);
-			header('Location: /'.$_SESSION['foldername']);
+			header('Location: /');
 			die();
 		}
 
