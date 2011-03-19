@@ -24,5 +24,22 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $loader = Zend_Loader_Autoloader::getInstance();
         $loader->registerNamespace('OpenSwitch_');
     }
+	
+	protected function _initTwitter()
+	{
+		$twitter = null;
+		$config = $this->getOption('twitter');
+		if(isset($_SESSION['TWITTER_ACCESS_TOKEN'])) {
+			$options = array(
+				'accessToken' => unserialize($_SESSION['TWITTER_ACCESS_TOKEN']),
+				'consumerKey' => $config['key'],
+				'consumerSecret' => $config['secret'],
+			);
+
+			$twitter = new Zend_Service_Twitter($options);
+		}
+		
+		return $twitter;
+	}
 }
 

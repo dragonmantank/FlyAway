@@ -71,55 +71,65 @@
 	});
 </script>
 
-<div id="search_area">
+<?php if(!isset($_SESSION['TWITTER_ACCESS_TOKEN'])): ?>
 	<p>
-		To get us started, please type in your Twitter username. Since we're just gathering public data, there is no need to log into Twitter. Click on "Let's Begin" and we will check to see if your username is available on Identi.ca, and then check your friends.
+		To begin, we will need to log into Twitter. We do this to help with Twitter's rate limit, and will not post anything to your account.
 	</p>
 	
 	<p>
-		If you have any ideas on improving this service (and I have a few of my own), head on over to our <a href="https://github.com/dragonmantank/FlyAway" target="_new">github page</a> and log an <a href="https://github.com/dragonmantank/FlyAway/issues" target="_new">Issue</a>. 
+		<a href="<?php echo $this->baseUrl(); ?>/auth/"><img src="<?php echo $this->baseUrl(); ?>/images/sign-in-with-twitter-l.png"></a>
 	</p>
-	
-	<form>
-		Twitter Username: <input type="text" id="twitter_username" /> <input type="submit" id="button_search" value="Let's Begin" />
-	</form>
-</div>
+<?php else: ?>
+	<div id="search_area">
+		<p>
+			To get us started, please type in your Twitter username. Since we're just gathering public data, there is no need to log into Twitter. Click on "Let's Begin" and we will check to see if your username is available on Identi.ca, and then check your friends.
+		</p>
 
-<div id="loader">
-	<div id="loader_message">Compiling all the information. The more friends you have, the longer this will take...</div>
-	<img src="<?php echo $this->baseUrl(); ?>/css/images/ajax-loader.gif" />
-</div>
+		<p>
+			If you have any ideas on improving this service (and I have a few of my own), head on over to our <a href="https://github.com/dragonmantank/FlyAway" target="_new">github page</a> and log an <a href="https://github.com/dragonmantank/FlyAway/issues" target="_new">Issue</a>. 
+		</p>
 
-<div id="error">
-	<p>
-		Oops, we couldn't find that Twitter username. Maybe it was misspelled?
-	</p>
-</div>
-
-<div id="username_results">
-	<h3>Is your username available?</h3>
-	
-	<p id="username_available"></p>
-</div>
-
-<div id="friends_results">
-	<h3>What about your friends?</h3>
-	
-	<p>
-		Friends who have (possibly) switched: <span id="statusnet_count"></span>
-	</p>
-	
-	<p>
-		Friends who have (possibly) not switched: <span id="twitter_count"></span>
-	</p>
-	
-	<div>
-		<h4>Friends on StatusNet</h4>
-		<div id="statusnet_friends"></div>
+		<form>
+			Twitter Username: <input type="text" id="twitter_username" /> <input type="submit" id="button_search" value="Let's Begin" />
+		</form>
 	</div>
-	
-	<div>
-		<h4>Friends only on Twitter</h4>
-		<div id="twitter_friends"></div>
+
+	<div id="loader">
+		<div id="loader_message">Compiling all the information. The more friends you have, the longer this will take...</div>
+		<img src="<?php echo $this->baseUrl(); ?>/css/images/ajax-loader.gif" />
 	</div>
-</div>
+
+	<div id="error">
+		<p>
+			Oops, we couldn't find that Twitter username. Maybe it was misspelled?
+		</p>
+	</div>
+
+	<div id="username_results">
+		<h3>Is your username available?</h3>
+
+		<p id="username_available"></p>
+	</div>
+
+	<div id="friends_results">
+		<h3>What about your friends?</h3>
+
+		<p>
+			Friends who have (possibly) switched: <span id="statusnet_count"></span>
+		</p>
+
+		<p>
+			Friends who have (possibly) not switched: <span id="twitter_count"></span>
+		</p>
+
+		<div>
+			<h4>Friends on StatusNet</h4>
+			<div id="statusnet_friends"></div>
+		</div>
+
+		<div>
+			<h4>Friends only on Twitter</h4>
+			<div id="twitter_friends"></div>
+		</div>
+	</div>
+<?php endif; ?>

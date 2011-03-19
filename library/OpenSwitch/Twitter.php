@@ -2,48 +2,64 @@
 
 class OpenSwitch_Twitter
 {
-	static protected function fetchFriends($username, $cursor = -1)
+	static protected function fetchFriends($page = 1)
 	{
-		$ch = curl_init('http://api.twitter.com/1/statuses/friends/'.$username.'.json?cursor='.$cursor);
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		$result = curl_exec($ch);
-		return json_decode($result);
+		echo 'Calling API';
+		$twitter = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('twitter');
+		$data = $twitter->user->friends(array('page' => $page));
+		return $data;
 	}
 	
 	static public function getFriendsList($username)
 	{
 		$cache = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cache');
 		$key = 'twitter_friendslist_'.$username;
-		$friends = $cache->load($key);
-		
+		//$friends = $cache->load($key);
+		$friends = false;
 		if($friends == false) {
-			$data = self::fetchFriends($username);	
-			$friends = self::processList($data);
-			$cursor = sprintf('%.0f', $data->next_cursor);
-
-			while((string)$data->next_cursor != '0') {
-				$data = self::fetchFriends($username, $cursor);
-				$friends = array_merge($friends, self::processList($data));
+			
+			$friends = array();
+			$count = 99;
+			$page = 1;
+			while($count == 99) {
+				echo 'Getting friends';
+				try {
+					$data = self::fetchFriends($page);
+					if(is_array($data->users)) {
+						$list = self::processList($data->user);
+						$friends = array_merge($friends, $list);
+						$count = count($list);
+						$page++;
+					} else {
+						break;
+					}
+				} catch(Exception $e) {
+				}
 			}
+			
+			if($data->error) {
+				return $data->error;
+			}
+			
 			$cache->save($friends, $key);
 		}
 		return $friends;
 	}
 	
-	static protected function processList($data)
+	static protected function processList($users)
 	{
-		if(is_array($data->users)) {
-			$friends = array();
-			foreach($data->users as $friend) {
-				$friends[$friend->screen_name] = array(
-					'profile_image' => $friend->profile_image_url,
-					'screen_name' => $friend->screen_name,
-					'name' => $friend->name,
-				);
-			}
-			return $friends;
-		} else {
-			return array();
+		$friends = array();
+		foreach ($users as $friend) {
+			$screen_name = (string)$friend->screen_name;
+			$profile_image = (string)$friend->profile_image_url;
+			$name = (string)$friend->name;
+			
+			$friends[$screen_name] = array(
+				'profile_image' => $profile_image,
+				'screen_name' => $screen_name,
+				'name' => $name,
+			);
 		}
+		return $friends;
 	}
 }
