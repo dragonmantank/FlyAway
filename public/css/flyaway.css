@@ -14,6 +14,10 @@ p {
 	font-size: 10pt;
 }
 
+img {
+	border: 0px;
+}
+
 #header {
 	height: 60px;
 	line-height: 60px;
