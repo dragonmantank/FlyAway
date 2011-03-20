@@ -40,8 +40,12 @@
 				dataType: 'json',
 				success: function(data, status, rq) {
 					if(data != null) {
-						$('#statusnet_count').html(data.statusnet.length);
 						$('#twitter_count').html(data.twitter.length);
+
+						for(var i in data.statusnet_subscribed) {
+							var html = Mustache.to_html(statusnet_template, data.statusnet_subscribed[i]);
+							$('#statusnet_existing_friends').append(html);
+						}
 
 						for(var i in data.statusnet) {
 							var html = Mustache.to_html(statusnet_template, data.statusnet[i]);
@@ -70,6 +74,20 @@
 		});
 	});
 </script>
+
+<?php if(!isset($_SESSION['IDENTICA_ACCESS_TOKEN'])): ?>
+	<p>
+		If you have an Identi.ca account, click the button to sign in below. We'll use this information to narrow down who you aren't following on Identi.ca that you aren't on Twitter. This is not required, but it will make the results more usable, and let you subscribe to people from FlyAway!
+	</p>
+	
+	<p>
+		<a href="<?php echo $this->baseUrl(); ?>/auth/identica"><img src="<?php echo $this->baseUrl(); ?>/images/sign-in-with-identica-l.png"></a>
+	</p>
+<?php else: ?>
+	<p>
+		Great, we're signed into Identi.ca!
+	</p>
+<?php endif; ?>
 
 <?php if(!isset($_SESSION['TWITTER_ACCESS_TOKEN'])): ?>
 	<p>
@@ -117,15 +135,16 @@
 		<h3>What about your friends?</h3>
 
 		<p>
-			Friends who have (possibly) switched: <span id="statusnet_count"></span>
-		</p>
-
-		<p>
 			Friends who have (possibly) not switched: <span id="twitter_count"></span>
 		</p>
+		
+		<div>
+			<h4>Friends on StatusNet You Already Follow</h4>
+			<div id="statusnet_existing_friends"></div>
+		</div>
 
 		<div>
-			<h4>Friends on StatusNet</h4>
+			<h4>Friends on StatusNet You Need to Follow</h4>
 			<div id="statusnet_friends"></div>
 		</div>
 

@@ -13,11 +13,24 @@ class WorkerController extends Zend_Controller_Action
 	public function twitterfriendsAction()
 	{
 		if($this->getRequest()->isPost()) {
+			$identicaFriends = null;
+			$result = array();
+			
 			$data = $this->getRequest()->getPost();
 			$friends = OpenSwitch_Twitter::getFriendsList();
-
+			
+			if(isset($_SESSION['IDENTICA_ACCESS_TOKEN'])) {
+				$identicaFriends = OpenSwitch_Identica::getFriendsList();
+			}
+			
+			if(is_array($identicaFriends)) {
+				$result['statusnet_subscribed'] = array_intersect_assoc($friends, $identicaFriends);
+				foreach($result['statusnet_subscribed'] as $screen_name => $friend) {
+					unset($friends[$screen_name]);
+				}
+			}
+			
 			if(count($friends)) {
-				$result = array();
 				foreach($friends as $screen_name => $friend) {
 					if(OpenSwitch_Identica::userExists($screen_name)) {
 						$result['statusnet'][] = (array)$friend;

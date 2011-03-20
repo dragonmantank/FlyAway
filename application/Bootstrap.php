@@ -25,6 +25,23 @@ class Bootstrap extends Zend_Application_Bootstrap_Bootstrap
         $loader->registerNamespace('OpenSwitch_');
     }
 	
+	protected function _initIdentica()
+	{
+		$identica = null;
+		$config = $this->getOption('identica');
+		if(isset($_SESSION['IDENTICA_ACCESS_TOKEN'])) {
+			$options = array(
+				'accessToken' => unserialize($_SESSION['IDENTICA_ACCESS_TOKEN']),
+				'consumerKey' => $config['key'],
+				'consumerSecret' => $config['secret'],
+			);
+
+			$identica = new Zend_Service_Identica($options);
+		}
+		
+		return $identica;
+	}
+	
 	protected function _initTwitter()
 	{
 		$twitter = null;
