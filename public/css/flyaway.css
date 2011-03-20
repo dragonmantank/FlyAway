@@ -54,6 +54,9 @@ img {
 .friend img {
 	height: 48px;
 	width: 48px;
+	display: inline;
+	margin: 5px;
+	float: left;
 }
 
 #friends_results h4 {

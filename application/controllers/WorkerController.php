@@ -10,6 +10,20 @@ class WorkerController extends Zend_Controller_Action
 		$this->_helper->viewRenderer->setNoRender(true);
 	}
 	
+	public function identicafollowAction()
+	{
+		$status = 0;
+		if($this->getRequest()->isPost()) {
+			
+			$data = $this->getRequest()->getPost();
+			if(OpenSwitch_Identica::follow($data['screen_name'])) {
+				$status = 1;
+			}
+		}
+		
+		echo json_encode(array('status' => $status));
+	}
+	
 	public function twitterfriendsAction()
 	{
 		if($this->getRequest()->isPost()) {

@@ -9,6 +9,18 @@ class OpenSwitch_Identica
 		return $data;
 	}
 	
+	static public function follow($screen_name)
+	{
+		$identica = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('identica');
+		$response = $identica->friendship->create($screen_name);
+		
+		if($response->error) {
+			return false;
+		} else {
+			return $response;
+		}
+	}
+	
 	static public function getFriendsList()
 	{
 		$cache = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('cache');

@@ -1,6 +1,38 @@
 <script type="text/javascript">
-	var statusnet_template = '<div class="friend"><img src="{{profile_image}}" /> {{name}} (<a href="http://identi.ca/{{screen_name}}" target="_new">@{{screen_name}}</a>)</div>';
-	var twitter_template = '<div class="friend"><img src="{{profile_image}}" /> {{name}} (<a href="http://twitter/{{screen_name}}" target="_new">@{{screen_name}}</a>)</div>';
+	var statusnet_template = '<div class="friend" id="friend_{{screen_name}}"><img src="{{profile_image}}"/></div>';
+	var twitter_template = '<div class="friend" id="friend_{{screen_name}}"><img src="{{profile_image}}"/></div>';
+	
+	function subscribe(screen_name, name) {
+		if(<?php echo $this->allowSubscribe; ?>) {
+			$.ajax({
+				data: { 'screen_name': screen_name },
+				dataType: 'json',
+				success: function(data, status, rq) {
+					var message = '';
+					if(data.status) {
+						message = 'Great, you\'ve subscribed to '+screen_name;
+					} else {
+						message = 'Oops, we couldn\'t follow that user';
+					}
+
+					alert(message);
+					var id = '#friend_'+screen_name;
+					$(id).hide().appendTo('#statusnet_existing_friends');
+					$(id).poshytip({
+						className: 'tip-yellow',
+						content: '<a href="http://identi.ca/'+screen_name+'" target="_new">View '+name+'\'s Profile</a>',
+						allowTipHover: true
+					});
+					$(id).fadeIn()
+				},
+				type: 'POST',
+				url: '<?php echo $this->baseUrl(); ?>/worker/identicafollow'
+			});
+		} else {
+			alert('Please sign into Identi.ca to follow uses through FlyAway.');
+			return false;
+		}
+	}
 	
 	$(document).ready(function() {
 		$('#button_search').click(function() {
@@ -40,27 +72,42 @@
 				dataType: 'json',
 				success: function(data, status, rq) {
 					if(data != null) {
-						$('#twitter_count').html(data.twitter.length);
-
 						if(data.statusnet_subscribed != undefined || data.statusnet_subscribed != '') {
 							for(var i in data.statusnet_subscribed) {
-								var html = Mustache.to_html(statusnet_template, data.statusnet_subscribed[i]);
+								var friend = data.statusnet_subscribed[i];
+								var html = Mustache.to_html(statusnet_template, friend);
 								$('#statusnet_existing_friends').append(html);
+								$('#friend_'+friend.screen_name).poshytip({
+									className: 'tip-yellow',
+									content: '<a href="http://identi.ca/'+friend.screen_name+'" target="_new">View '+friend.name+'\'s Profile</a>',
+									allowTipHover: true
+								});
 								$('#statusnet_existing_friends_container').show();
 							}
 						}
 
 						for(var i in data.statusnet) {
+							var friend = data.statusnet[i];
 							var html = Mustache.to_html(statusnet_template, data.statusnet[i]);
 							$('#statusnet_friends').append(html);
+							$('#friend_'+friend.screen_name).poshytip({
+								className: 'tip-yellow',
+								content: '<a href="javascript:void(0);" onClick="subscribe(\''+friend.screen_name+'\', \''+friend.name+'\');">Subscribe to '+friend.name+' on Identi.ca</a><br /><a href="http://identi.ca/'+friend.screen_name+'" target="_new">View '+friend.name+'\'s Profile</a>',
+								allowTipHover: true
+							});
 						}
 
 						for(var i in data.twitter) {
+							var friend = data.twitter[i];
 							var html = Mustache.to_html(twitter_template, data.twitter[i]);
 							$('#twitter_friends').append(html);
-
+							$('#friend_'+friend.screen_name).poshytip({
+								className: 'tip-yellow',
+								content: '<a href="http://www.twitter.com/'+friend.screen_name+'" target="_new">View '+friend.name+'\'s Twitter Profile</a>',
+								allowTipHover: true
+							});
 						}
-
+						
 						$('#loader').hide();
 						$('#username_results').fadeIn();					
 						$('#friends_results').fadeIn();						
@@ -137,21 +184,17 @@
 	<div id="friends_results">
 		<h3>What about your friends?</h3>
 
-		<p>
-			Friends who have (possibly) not switched: <span id="twitter_count"></span>
-		</p>
-		
-		<div style="display: none;" id="statusnet_existing_friends_container">
+		<div style="display: none; clear: both" id="statusnet_existing_friends_container">
 			<h4>Friends on StatusNet You Already Follow</h4>
 			<div id="statusnet_existing_friends"></div>
 		</div>
 
-		<div>
+		<div style="clear: both">
 			<h4>Friends on StatusNet You Need to Follow</h4>
 			<div id="statusnet_friends"></div>
 		</div>
 
-		<div>
+		<div style="clear: both">
 			<h4>Friends only on Twitter</h4>
 			<div id="twitter_friends"></div>
 		</div>
