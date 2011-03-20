@@ -42,9 +42,12 @@
 					if(data != null) {
 						$('#twitter_count').html(data.twitter.length);
 
-						for(var i in data.statusnet_subscribed) {
-							var html = Mustache.to_html(statusnet_template, data.statusnet_subscribed[i]);
-							$('#statusnet_existing_friends').append(html);
+						if(data.statusnet_subscribed != undefined || data.statusnet_subscribed != '') {
+							for(var i in data.statusnet_subscribed) {
+								var html = Mustache.to_html(statusnet_template, data.statusnet_subscribed[i]);
+								$('#statusnet_existing_friends').append(html);
+								$('#statusnet_existing_friends_container').show();
+							}
 						}
 
 						for(var i in data.statusnet) {
@@ -138,7 +141,7 @@
 			Friends who have (possibly) not switched: <span id="twitter_count"></span>
 		</p>
 		
-		<div>
+		<div style="display: none;" id="statusnet_existing_friends_container">
 			<h4>Friends on StatusNet You Already Follow</h4>
 			<div id="statusnet_existing_friends"></div>
 		</div>
