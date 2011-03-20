@@ -7,7 +7,9 @@ class IndexController extends Zend_Controller_Action
 		$twitter = Zend_Controller_Front::getInstance()->getParam('bootstrap')->getResource('twitter');
 		
 		$this->view->twitter = $twitter;
-		$this->view->access_token = unserialize($_SESSION['TWITTER_ACCESS_TOKEN']);
+		if(isset($_SESSION['TWITTER_ACCESS_TOKEN'])) {
+			$this->view->access_token = unserialize($_SESSION['TWITTER_ACCESS_TOKEN']);
+		}
     }
 }
 
